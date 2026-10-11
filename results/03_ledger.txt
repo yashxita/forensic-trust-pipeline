@@ -1,0 +1,45 @@
+==========================================================================
+MODULE 3: WORKSTATION STATE LEDGER (report Section 9.2)
+==========================================================================
+
+--------------------------------------------------------------------------
+Phase 1: log four extractions; the tool changes after the second
+--------------------------------------------------------------------------
+[INFO] entry 0  CASE-001  hash bc26dffc7b6d02aa...  drift: none
+[INFO] entry 1  CASE-002  hash 56dad91c98d887c2...  drift: none
+[INFO] entry 2  CASE-003  hash fc8406333628f53f...  drift: ['file changed: extraction_tool.bin']
+[INFO] entry 3  CASE-004  hash e1fc5add33d193df...  drift: none
+[ OK ] Ledger verification: INTACT
+[ OK ] Drift on entry 2 flagged automatically: cases 3 and 4 ran on a changed tool.
+[INFO] Head hash sealed out-of-band: e1fc5add33d193df... at 2026-10-11T05:31:42+00:00
+
+--------------------------------------------------------------------------
+Phase 2: attacker hides the drift in entry 2 (no re-hashing)
+--------------------------------------------------------------------------
+[FAIL] Ledger verification: entry 2: entry content does not match its entry_hash
+
+--------------------------------------------------------------------------
+Phase 3: attacker also recomputes entry 2's own hash
+--------------------------------------------------------------------------
+[FAIL] Ledger verification: entry 3: prev_hash does not match the previous entry
+
+--------------------------------------------------------------------------
+Phase 4: attacker recomputes the entire chain
+--------------------------------------------------------------------------
+[ OK ] Ledger verification: INTACT
+[ OK ] External anchor check FAILED as it should: report does not match the sealed SHA-256
+[FAIL] Ledger verification: entry 3: head hash differs from the externally anchored head
+
+--------------------------------------------------------------------------
+Result
+--------------------------------------------------------------------------
++------------------------------+-------------------+-------------------------+
+| Attack                       | Chain check alone | Chain + external anchor |
++------------------------------+-------------------+-------------------------+
+| Edit entry, keep old hashes  | DETECTED          | DETECTED                |
+| Edit entry, fix its own hash | DETECTED          | DETECTED                |
+| Recompute whole chain        | MISSED            | DETECTED                |
++------------------------------+-------------------+-------------------------+
+[WARN] Limitation shown by phase 4: a hash chain alone cannot stop a full rewrite.
+[INFO] Fix: anchor the head hash with the external sealer after each extraction.
+[ OK ] Demo behaved as expected.

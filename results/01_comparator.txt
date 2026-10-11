@@ -1,0 +1,42 @@
+==========================================================================
+MODULE 1: DUAL-PARSER COMPARATOR (report Section 10.2)
+==========================================================================
+[INFO] Sample evidence database: sample_messages.db (49152 bytes)
+
+--------------------------------------------------------------------------
+Step 1: honest run, two independent parsers
+--------------------------------------------------------------------------
+[INFO] Parser A = Python sqlite3 (C library). Parser B = pure-Python file-format reader.
++--------------------------+----------+----------+
+| Check                    | Parser A | Parser B |
++--------------------------+----------+----------+
+| Rows parsed              | 300      | 300      |
+| Column names match       | -        | yes      |
+| Rows only in this parser | 0        | 0        |
+| Field-level differences  | 0        |          |
++--------------------------+----------+----------+
+[ OK ] VERDICT: AGREE. Both parsers produced identical output.
+
+--------------------------------------------------------------------------
+Step 2: Parser A is compromised and tampers with its own output
+--------------------------------------------------------------------------
+[WARN] attacker action: hid message id=42
+[WARN] attacker action: altered timestamp of message id=102
+[WARN] attacker action: injected fake message id=301
++--------------------------+-----------+----------+
+| Check                    | Parser A* | Parser B |
++--------------------------+-----------+----------+
+| Rows parsed              | 300       | 300      |
+| Column names match       | -         | yes      |
+| Rows only in this parser | 1         | 1        |
+| Field-level differences  | 1         |          |
++--------------------------+-----------+----------+
+  - id 301: present in Parser A* only
+  - id 42: present in Parser B only
+  - id 102, column 'sent_at': Parser A*='2021-01-01T00:00:00' vs Parser B='2026-03-02T12:54:00'
+[FAIL] VERDICT: DIVERGENCE. Escalate to manual analysis before trusting this report.
+
+--------------------------------------------------------------------------
+Result
+--------------------------------------------------------------------------
+[ OK ] Honest run agreed; tampering in one parser was detected by the other.

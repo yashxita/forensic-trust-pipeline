@@ -1,0 +1,21 @@
+==========================================================================
+MODULE 4: PARSER FUZZING HARNESS (report Sections 10.1, 10.4)
+==========================================================================
+[INFO] Seed file: sample_messages.db (49152 bytes), iterations: 3000, rng seed: 1337
+
+--------------------------------------------------------------------------
+Results
+--------------------------------------------------------------------------
++-------------------------------+---------+
+| Metric                        | Value   |
++-------------------------------+---------+
+| Mutated inputs tested         | 3000    |
+| Parsed without error          | 1073    |
+| Rejected cleanly (ParseError) | 1927    |
+| Unexpected crashes            | 0       |
+| Distinct crash signatures     | 0       |
+| Slow inputs (> 1 s)           | 0       |
+| Mean time per input           | 0.50 ms |
+| Total wall time               | 1.5 s   |
++-------------------------------+---------+
+[ OK ] No unexpected exceptions: every malformed input was parsed or rejected cleanly.

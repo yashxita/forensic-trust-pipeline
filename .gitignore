@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+
+# Demo keys must never be committed
+sealing/hsm_keystore/
+
+# Scratch output produced by the demos
+data/sample_messages.db
+results/demo_sealing/
+results/demo_ledger/
+results/crashes/

@@ -1,0 +1,26 @@
+==========================================================================
+MODULE 2: OUT-OF-BAND SEALING (report Sections 5.3, 10.3)
+==========================================================================
+[INFO] Trusted sealer public key fingerprint: c4a8235cbafec4d4
+[INFO] Report sealed. sha256 = 89d28749bf131bdb3894f19aff27d7af...  at 2026-10-11T05:31:42+00:00
+
+--------------------------------------------------------------------------
+Results (PASS means the check accepted the report)
+--------------------------------------------------------------------------
++--------------------------------+------------------+--------------+
+| Scenario                       | Plain hash check | Sealed check |
++--------------------------------+------------------+--------------+
+| A. Report untouched            | PASS             | PASS         |
+| B. Edit + recompute plain hash | PASS             | FAIL         |
+| C. Edit + rewrite seal digest  | PASS             | FAIL         |
+| D. Edit + re-sign with own key | PASS             | FAIL         |
++--------------------------------+------------------+--------------+
+[INFO] B reason: report does not match the sealed SHA-256
+[INFO] C reason: signature invalid (not issued by the trusted sealer)
+[INFO] D reason: signature invalid (not issued by the trusted sealer)
+
+--------------------------------------------------------------------------
+Conclusion
+--------------------------------------------------------------------------
+[ OK ] The plain hash accepted every tampered report (B, C, D).
+[ OK ] The sealed check rejected all of them, without needing to trust the workstation.
